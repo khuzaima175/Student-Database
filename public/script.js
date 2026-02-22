@@ -83,11 +83,11 @@ async function loadDashboard() {
 
         // Grade distribution chart
         renderBarChart('gradeChart', data.gradeDistribution, {
-            'A+': '#00b894', 'A': '#00b894', 'A-': '#00cec9',
-            'B+': '#0984e3', 'B': '#0984e3', 'B-': '#74b9ff',
-            'C+': '#fdcb6e', 'C': '#fdcb6e', 'C-': '#ffeaa7',
-            'D+': '#e17055', 'D': '#e17055', 'D-': '#fab1a0',
-            'F': '#d63031'
+            'A+': '#22c55e', 'A': '#22c55e', 'A-': '#34d399',
+            'B+': '#3b82f6', 'B': '#3b82f6', 'B-': '#60a5fa',
+            'C+': '#f59e0b', 'C': '#f59e0b', 'C-': '#fbbf24',
+            'D+': '#f97316', 'D': '#f97316', 'D-': '#fb923c',
+            'F': '#ef4444'
         });
 
         // Course popularity chart
@@ -110,7 +110,7 @@ function renderBarChart(containerId, dataObj, colorMap) {
     }
 
     const maxVal = Math.max(...entries.map(e => e[1]), 1);
-    const colors = ['#6c5ce7', '#a29bfe', '#0984e3', '#74b9ff', '#00b894', '#00cec9', '#fdcb6e', '#e17055', '#d63031', '#fab1a0', '#636e72', '#b2bec3'];
+    const colors = ['#0ea5e9', '#3b82f6', '#22c55e', '#14b8a6', '#f59e0b', '#f97316', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4', '#64748b', '#94a3b8'];
 
     let html = '<div class="bar-chart">';
     entries.forEach(([label, value], i) => {
@@ -203,7 +203,7 @@ async function loadStudents() {
         document.getElementById('stuCount').textContent = data.total || 0;
     } catch (err) {
         console.error('Error loading students:', err);
-        document.getElementById('stuLoading').innerHTML = '<p style="color:#e74c3c;">Failed to load.</p>';
+        document.getElementById('stuLoading').innerHTML = '<p style="color:var(--danger);">Failed to load.</p>';
     }
 }
 
@@ -243,14 +243,14 @@ document.getElementById('studentForm').addEventListener('submit', async (e) => {
         });
         const result = await res.json();
         if (res.ok) {
-            showMsg('stuMessage', '✅ ' + result.message, 'success');
+            showMsg('stuMessage', result.message, 'success');
             document.getElementById('studentForm').reset();
             loadStudents();
             loadStudentFilters();
         } else {
-            showMsg('stuMessage', '❌ ' + result.error, 'error');
+            showMsg('stuMessage', result.error, 'error');
         }
-    } catch { showMsg('stuMessage', '❌ Could not connect to server.', 'error'); }
+    } catch { showMsg('stuMessage', 'Could not connect to server.', 'error'); }
 });
 
 // Edit student
@@ -277,14 +277,14 @@ document.getElementById('editStudentForm').addEventListener('submit', async (e) 
         });
         const result = await res.json();
         if (res.ok) {
-            showMsg('stuMessage', '✅ ' + result.message, 'success');
+            showMsg('stuMessage', result.message, 'success');
             closeModal('editStudentModal');
             loadStudents();
             loadStudentFilters();
         } else {
-            showMsg('stuMessage', '❌ ' + result.error, 'error');
+            showMsg('stuMessage', result.error, 'error');
         }
-    } catch { showMsg('stuMessage', '❌ Could not connect.', 'error'); }
+    } catch { showMsg('stuMessage', 'Could not connect.', 'error'); }
 });
 
 // Delete student
@@ -294,13 +294,13 @@ async function deleteStudent(id) {
         const res = await fetch(`/api/students/${id}`, { method: 'DELETE', headers: authHeaders() });
         const result = await res.json();
         if (res.ok) {
-            showMsg('stuMessage', '🗑️ ' + result.message, 'success');
+            showMsg('stuMessage', result.message, 'success');
             loadStudents();
             loadStudentFilters();
         } else {
-            showMsg('stuMessage', '❌ ' + result.error, 'error');
+            showMsg('stuMessage', result.error, 'error');
         }
-    } catch { showMsg('stuMessage', '❌ Could not connect.', 'error'); }
+    } catch { showMsg('stuMessage', 'Could not connect.', 'error'); }
 }
 
 // Search & filter
@@ -381,7 +381,7 @@ async function loadCourses() {
         document.getElementById('crsCount').textContent = data.total || 0;
     } catch (err) {
         console.error('Error loading courses:', err);
-        document.getElementById('crsLoading').innerHTML = '<p style="color:#e74c3c;">Failed to load.</p>';
+        document.getElementById('crsLoading').innerHTML = '<p style="color:var(--danger);">Failed to load.</p>';
     }
 }
 
@@ -422,14 +422,14 @@ document.getElementById('courseForm').addEventListener('submit', async (e) => {
         });
         const result = await res.json();
         if (res.ok) {
-            showMsg('crsMessage', '✅ ' + result.message, 'success');
+            showMsg('crsMessage', result.message, 'success');
             document.getElementById('courseForm').reset();
             loadCourses();
             loadDepartments();
         } else {
-            showMsg('crsMessage', '❌ ' + result.error, 'error');
+            showMsg('crsMessage', result.error, 'error');
         }
-    } catch { showMsg('crsMessage', '❌ Could not connect to server.', 'error'); }
+    } catch { showMsg('crsMessage', 'Could not connect to server.', 'error'); }
 });
 
 // Edit course
@@ -458,14 +458,14 @@ document.getElementById('editCourseForm').addEventListener('submit', async (e) =
         });
         const result = await res.json();
         if (res.ok) {
-            showMsg('crsMessage', '✅ ' + result.message, 'success');
+            showMsg('crsMessage', result.message, 'success');
             closeModal('editCourseModal');
             loadCourses();
             loadDepartments();
         } else {
-            showMsg('crsMessage', '❌ ' + result.error, 'error');
+            showMsg('crsMessage', result.error, 'error');
         }
-    } catch { showMsg('crsMessage', '❌ Could not connect.', 'error'); }
+    } catch { showMsg('crsMessage', 'Could not connect.', 'error'); }
 });
 
 // Delete course
@@ -475,13 +475,13 @@ async function deleteCourse(id) {
         const res = await fetch(`/api/courses/${id}`, { method: 'DELETE', headers: authHeaders() });
         const result = await res.json();
         if (res.ok) {
-            showMsg('crsMessage', '🗑️ ' + result.message, 'success');
+            showMsg('crsMessage', result.message, 'success');
             loadCourses();
             loadDepartments();
         } else {
-            showMsg('crsMessage', '❌ ' + result.error, 'error');
+            showMsg('crsMessage', result.error, 'error');
         }
-    } catch { showMsg('crsMessage', '❌ Could not connect.', 'error'); }
+    } catch { showMsg('crsMessage', 'Could not connect.', 'error'); }
 }
 
 // Search & filter
@@ -564,7 +564,7 @@ async function loadEnrollments() {
         document.getElementById('enrCount').textContent = data.total || 0;
     } catch (err) {
         console.error('Error loading enrollments:', err);
-        document.getElementById('enrLoading').innerHTML = '<p style="color:#e74c3c;">Failed to load.</p>';
+        document.getElementById('enrLoading').innerHTML = '<p style="color:var(--danger);">Failed to load.</p>';
     }
 }
 
@@ -612,14 +612,14 @@ document.getElementById('enrollForm').addEventListener('submit', async (e) => {
         });
         const result = await res.json();
         if (res.ok) {
-            showMsg('enrMessage', '✅ ' + result.message, 'success');
+            showMsg('enrMessage', result.message, 'success');
             document.getElementById('enrollForm').reset();
             loadEnrollments();
             loadSemesters();
         } else {
-            showMsg('enrMessage', '❌ ' + result.error, 'error');
+            showMsg('enrMessage', result.error, 'error');
         }
-    } catch { showMsg('enrMessage', '❌ Could not connect to server.', 'error'); }
+    } catch { showMsg('enrMessage', 'Could not connect to server.', 'error'); }
 });
 
 // Edit enrollment
@@ -646,14 +646,14 @@ document.getElementById('editEnrollForm').addEventListener('submit', async (e) =
         });
         const result = await res.json();
         if (res.ok) {
-            showMsg('enrMessage', '✅ ' + result.message, 'success');
+            showMsg('enrMessage', result.message, 'success');
             closeModal('editEnrollModal');
             loadEnrollments();
             loadSemesters();
         } else {
-            showMsg('enrMessage', '❌ ' + result.error, 'error');
+            showMsg('enrMessage', result.error, 'error');
         }
-    } catch { showMsg('enrMessage', '❌ Could not connect.', 'error'); }
+    } catch { showMsg('enrMessage', 'Could not connect.', 'error'); }
 });
 
 // Delete enrollment
@@ -663,13 +663,13 @@ async function deleteEnrollment(id) {
         const res = await fetch(`/api/enrollments/${id}`, { method: 'DELETE', headers: authHeaders() });
         const result = await res.json();
         if (res.ok) {
-            showMsg('enrMessage', '🗑️ ' + result.message, 'success');
+            showMsg('enrMessage', result.message, 'success');
             loadEnrollments();
             loadSemesters();
         } else {
-            showMsg('enrMessage', '❌ ' + result.error, 'error');
+            showMsg('enrMessage', result.error, 'error');
         }
-    } catch { showMsg('enrMessage', '❌ Could not connect.', 'error'); }
+    } catch { showMsg('enrMessage', 'Could not connect.', 'error'); }
 }
 
 // Search & filter
@@ -742,7 +742,6 @@ async function loadSemesters() {
 
 function exportCSV(type) {
     const url = `/api/export/${type}`;
-    // Use a temporary link to trigger download with auth
     fetch(url, { headers: authHeaders() })
         .then(res => res.blob())
         .then(blob => {
@@ -753,58 +752,6 @@ function exportCSV(type) {
             URL.revokeObjectURL(link.href);
         })
         .catch(err => console.error('Export error:', err));
-}
-
-// ══════════════════════════════════════════════════════════════
-//  SEED / CLEAR DATABASE
-// ══════════════════════════════════════════════════════════════
-
-async function seedDatabase() {
-    if (!confirm('This will load 50 students, 20 courses, and 120+ enrollments with grades into your database. Continue?')) return;
-
-    const btn = document.querySelector('.seed-btn');
-    btn.textContent = '⏳ Loading...';
-    btn.disabled = true;
-
-    try {
-        const res = await fetch('/api/seed', { method: 'POST', headers: authHeaders() });
-        const result = await res.json();
-        if (res.ok) {
-            showMsg('dashMessage', '🌱 ' + result.message, 'success');
-            loadDashboard();
-        } else {
-            showMsg('dashMessage', '❌ ' + result.error, 'error');
-        }
-    } catch {
-        showMsg('dashMessage', '❌ Could not connect to server.', 'error');
-    }
-
-    btn.textContent = '🌱 Load Demo Data';
-    btn.disabled = false;
-}
-
-async function clearDatabase() {
-    if (!confirm('⚠️ This will DELETE ALL your students, courses, and enrollments. Are you absolutely sure?')) return;
-
-    const btn = document.querySelector('.clear-btn');
-    btn.textContent = '⏳ Clearing...';
-    btn.disabled = true;
-
-    try {
-        const res = await fetch('/api/clear', { method: 'POST', headers: authHeaders() });
-        const result = await res.json();
-        if (res.ok) {
-            showMsg('dashMessage', '🗑️ ' + result.message, 'success');
-            loadDashboard();
-        } else {
-            showMsg('dashMessage', '❌ ' + result.error, 'error');
-        }
-    } catch {
-        showMsg('dashMessage', '❌ Could not connect to server.', 'error');
-    }
-
-    btn.textContent = '🗑️ Clear All Data';
-    btn.disabled = false;
 }
 
 // ══════════════════════════════════════════════════════════════

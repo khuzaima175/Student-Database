@@ -26,12 +26,12 @@ function switchTab(mode) {
 
     if (mode === 'login') {
         authBtnText.textContent = 'Sign In';
-        loginSubtitle.textContent = 'Sign in to manage your students';
+        loginSubtitle.textContent = 'Sign in to manage your records';
         authFooterText.innerHTML = 'Don\'t have an account? <a href="#" onclick="switchTab(\'signup\'); return false;">Sign Up</a>';
     } else {
         authBtnText.textContent = 'Create Account';
         loginSubtitle.textContent = 'Create an account to get started';
-        authFooterText.innerHTML = 'Already have an account? <a href="#" onclick="switchTab(\'login\'); return false;">Login</a>';
+        authFooterText.innerHTML = 'Already have an account? <a href="#" onclick="switchTab(\'login\'); return false;">Sign In</a>';
     }
 
     // Clear message
@@ -62,7 +62,7 @@ authForm.addEventListener('submit', async (e) => {
         const result = await response.json();
 
         if (response.ok) {
-            showMessage('✅ ' + result.message, 'success');
+            showMessage(result.message, 'success');
 
             // Save tokens
             if (result.session) {
@@ -76,10 +76,10 @@ authForm.addEventListener('submit', async (e) => {
                 window.location.href = '/';
             }, 500);
         } else {
-            showMessage('❌ ' + result.error, 'error');
+            showMessage(result.error, 'error');
         }
     } catch (err) {
-        showMessage('❌ Could not connect to server.', 'error');
+        showMessage('Could not connect to server.', 'error');
         console.error('Auth error:', err);
     } finally {
         authBtnText.style.display = 'inline';
@@ -96,14 +96,16 @@ function showMessage(text, type) {
 // ── Floating Particles ───────────────────────────────────────
 function createParticles() {
     const container = document.getElementById('particles');
-    for (let i = 0; i < 30; i++) {
+    const colors = ['#0ea5e9', '#3b82f6', '#06b6d4', '#22d3ee'];
+    for (let i = 0; i < 25; i++) {
         const particle = document.createElement('div');
         particle.className = 'particle';
         particle.style.left = Math.random() * 100 + '%';
-        particle.style.animationDuration = (Math.random() * 15 + 10) + 's';
+        particle.style.animationDuration = (Math.random() * 18 + 12) + 's';
         particle.style.animationDelay = (Math.random() * 10) + 's';
-        particle.style.width = particle.style.height = (Math.random() * 4 + 2) + 'px';
-        particle.style.opacity = Math.random() * 0.5 + 0.1;
+        particle.style.width = particle.style.height = (Math.random() * 3 + 1.5) + 'px';
+        particle.style.opacity = Math.random() * 0.35 + 0.05;
+        particle.style.background = colors[Math.floor(Math.random() * colors.length)];
         container.appendChild(particle);
     }
 }

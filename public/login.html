@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login — Student Records</title>
+  <title>Sign In — UniRecords</title>
+  <meta name="description" content="Sign in to UniRecords to manage your university student records." />
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 </head>
+
 <body class="login-page">
 
   <!-- ───── Floating Particles Background ───── -->
@@ -17,14 +20,20 @@
     <div class="login-card">
 
       <div class="login-header">
-        <div class="login-logo">📚</div>
-        <h1>Student Records</h1>
-        <p class="login-subtitle" id="loginSubtitle">Sign in to manage your students</p>
+        <div class="login-logo">
+          <svg viewBox="0 0 24 24" width="44" height="44" stroke="var(--accent)" fill="none" stroke-width="1.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+            <path d="M6 12v5c0 1.1 2.7 3 6 3s6-1.9 6-3v-5" />
+          </svg>
+        </div>
+        <h1>UniRecords</h1>
+        <p class="login-subtitle" id="loginSubtitle">Sign in to manage your records</p>
       </div>
 
       <!-- Tab Toggle -->
       <div class="auth-tabs">
-        <button class="auth-tab active" id="loginTab" onclick="switchTab('login')">Login</button>
+        <button class="auth-tab active" id="loginTab" onclick="switchTab('login')">Sign In</button>
         <button class="auth-tab" id="signupTab" onclick="switchTab('signup')">Sign Up</button>
       </div>
 
@@ -49,7 +58,8 @@
       <div id="authMessage" class="form-message"></div>
 
       <div class="login-footer">
-        <p id="authFooterText">Don't have an account? <a href="#" onclick="switchTab('signup'); return false;">Sign Up</a></p>
+        <p id="authFooterText">Don't have an account? <a href="#" onclick="switchTab('signup'); return false;">Sign
+            Up</a></p>
       </div>
 
     </div>
@@ -57,4 +67,5 @@
 
   <script src="login.js"></script>
 </body>
+
 </html>
