@@ -4,7 +4,7 @@
     "description": "A simple student records app with SQLite database connected to a web frontend",
     "main": "server.js",
     "scripts": {
-        "start": "node server.js"
+        "start": "node api/index.js"
     },
     "dependencies": {
         "@supabase/supabase-js": "^2.95.3",

@@ -15,7 +15,7 @@ const PORT = 3000;
 
 // Middleware: parse JSON bodies & serve static frontend files
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '../public')));
 
 // ── 2. Connect to Supabase ───────────────────────────────────
 const supabaseUrl = process.env.SUPABASE_URL;
