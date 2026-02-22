@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UniRecords — University Records Management</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+
+  <!-- ───── Sidebar ───── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <span class="sidebar-logo">🎓</span>
+      <span class="sidebar-title">UniRecords</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item active" data-page="dashboard" onclick="navigateTo('dashboard')">
+        <span class="nav-icon">📊</span>
+        <span>Dashboard</span>
+      </button>
+      <button class="nav-item" data-page="students" onclick="navigateTo('students')">
+        <span class="nav-icon">👥</span>
+        <span>Students</span>
+      </button>
+      <button class="nav-item" data-page="courses" onclick="navigateTo('courses')">
+        <span class="nav-icon">📚</span>
+        <span>Courses</span>
+      </button>
+      <button class="nav-item" data-page="enrollments" onclick="navigateTo('enrollments')">
+        <span class="nav-icon">📝</span>
+        <span>Enrollments</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <span class="user-avatar">👤</span>
+        <span class="user-email" id="sidebarUserEmail">user@email.com</span>
+      </div>
+      <button class="sidebar-logout" onclick="logout()">Logout</button>
+    </div>
+  </aside>
+
+  <!-- ───── Mobile Header ───── -->
+  <header class="mobile-header" id="mobileHeader">
+    <button class="hamburger" onclick="toggleSidebar()">☰</button>
+    <span class="mobile-title">🎓 UniRecords</span>
+    <button class="mobile-logout" onclick="logout()">Logout</button>
+  </header>
+
+  <!-- ───── Main Content Area ───── -->
+  <div class="main-wrapper">
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!--  PAGE: DASHBOARD                                       -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <section class="page active" id="page-dashboard">
+      <div class="page-header">
+        <div>
+          <h1>📊 Dashboard</h1>
+          <p class="page-subtitle">Overview of your university records</p>
+        </div>
+        <div class="page-actions">
+          <button class="export-btn seed-btn" onclick="seedDatabase()">🌱 Load Demo Data</button>
+          <button class="export-btn clear-btn" onclick="clearDatabase()">🗑️ Clear All Data</button>
+        </div>
+      </div>
+      <div id="dashMessage" class="form-message"></div>
+
+      <!-- Top Stats Cards -->
+      <div class="dash-stats" id="dashStats">
+        <div class="dash-stat-card stat-purple">
+          <div class="dash-stat-icon">👥</div>
+          <div class="dash-stat-info">
+            <span class="dash-stat-number" id="dashTotalStudents">0</span>
+            <span class="dash-stat-label">Total Students</span>
+          </div>
+        </div>
+        <div class="dash-stat-card stat-blue">
+          <div class="dash-stat-icon">📚</div>
+          <div class="dash-stat-info">
+            <span class="dash-stat-number" id="dashTotalCourses">0</span>
+            <span class="dash-stat-label">Total Courses</span>
+          </div>
+        </div>
+        <div class="dash-stat-card stat-green">
+          <div class="dash-stat-icon">📝</div>
+          <div class="dash-stat-info">
+            <span class="dash-stat-number" id="dashTotalEnrollments">0</span>
+            <span class="dash-stat-label">Enrollments</span>
+          </div>
+        </div>
+        <div class="dash-stat-card stat-gold">
+          <div class="dash-stat-icon">🏆</div>
+          <div class="dash-stat-info">
+            <span class="dash-stat-number" id="dashGPA">—</span>
+            <span class="dash-stat-label">Overall GPA</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="dash-charts-row">
+        <div class="card chart-card">
+          <h3>📈 Grade Distribution</h3>
+          <div class="chart-container" id="gradeChart"></div>
+        </div>
+        <div class="card chart-card">
+          <h3>🔥 Course Popularity</h3>
+          <div class="chart-container" id="courseChart"></div>
+        </div>
+      </div>
+
+      <!-- Status & Recent -->
+      <div class="dash-bottom-row">
+        <div class="card">
+          <h3>📋 Enrollment Status</h3>
+          <div class="status-pills" id="statusPills">
+            <div class="status-pill pill-enrolled">
+              <span class="pill-count" id="statusEnrolled">0</span>
+              <span>Enrolled</span>
+            </div>
+            <div class="status-pill pill-completed">
+              <span class="pill-count" id="statusCompleted">0</span>
+              <span>Completed</span>
+            </div>
+            <div class="status-pill pill-dropped">
+              <span class="pill-count" id="statusDropped">0</span>
+              <span>Dropped</span>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>🕐 Recent Activity</h3>
+          <div class="recent-list" id="recentActivity">
+            <p class="text-dim">No recent activity.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!--  PAGE: STUDENTS                                        -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <section class="page" id="page-students">
+      <div class="page-header">
+        <h1>👥 Students</h1>
+        <div class="page-actions">
+          <button class="export-btn" onclick="exportCSV('students')">📥 Export CSV</button>
+        </div>
+      </div>
+
+      <!-- Add Student Form -->
+      <div class="card form-card">
+        <h2>➕ Add New Student</h2>
+        <form id="studentForm">
+          <div class="form-row form-row-3">
+            <div class="form-group">
+              <label for="stuName">Full Name</label>
+              <input type="text" id="stuName" placeholder="e.g. Ali Khan" required />
+            </div>
+            <div class="form-group">
+              <label for="stuEmail">Email</label>
+              <input type="email" id="stuEmail" placeholder="e.g. ali@university.edu" required />
+            </div>
+            <div class="form-group">
+              <label for="stuCourse">Program</label>
+              <input type="text" id="stuCourse" placeholder="e.g. Computer Science" required />
+            </div>
+          </div>
+          <button type="submit" id="stuSubmitBtn">
+            <span class="btn-text">+ Add Student</span>
+          </button>
+        </form>
+        <div id="stuMessage" class="form-message"></div>
+      </div>
+
+      <!-- Search & Filter -->
+      <div class="card search-bar-card">
+        <div class="search-filter-row">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="stuSearch" placeholder="Search by name or email..." />
+          </div>
+          <select id="stuCourseFilter" class="filter-select">
+            <option value="">All Programs</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Students Table -->
+      <div class="card table-card">
+        <div class="table-header">
+          <h2>All Students</h2>
+          <span id="stuCount" class="badge">0</span>
+        </div>
+
+        <div id="stuLoading" class="spinner-container">
+          <div class="spinner"></div>
+          <p>Loading students...</p>
+        </div>
+
+        <div id="stuEmpty" class="empty-state" style="display:none;">
+          <div class="empty-icon">🎓</div>
+          <p>No students found. Add one above!</p>
+        </div>
+
+        <div class="table-wrapper" id="stuTableWrapper" style="display:none;">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Program</th>
+                <th>Added</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="stuTableBody"></tbody>
+          </table>
+        </div>
+
+        <div class="pagination" id="stuPagination" style="display:none;">
+          <button class="page-btn" id="stuPrevPage" onclick="stuChangePage(-1)">← Prev</button>
+          <span class="page-info" id="stuPageInfo">Page 1 of 1</span>
+          <button class="page-btn" id="stuNextPage" onclick="stuChangePage(1)">Next →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!--  PAGE: COURSES                                         -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <section class="page" id="page-courses">
+      <div class="page-header">
+        <h1>📚 Courses</h1>
+      </div>
+
+      <!-- Add Course Form -->
+      <div class="card form-card">
+        <h2>➕ Add New Course</h2>
+        <form id="courseForm">
+          <div class="form-row form-row-4">
+            <div class="form-group">
+              <label for="crsCode">Course Code</label>
+              <input type="text" id="crsCode" placeholder="e.g. CS101" required />
+            </div>
+            <div class="form-group">
+              <label for="crsName">Course Name</label>
+              <input type="text" id="crsName" placeholder="e.g. Database Systems" required />
+            </div>
+            <div class="form-group">
+              <label for="crsCredits">Credits</label>
+              <input type="number" id="crsCredits" placeholder="3" min="1" max="6" required />
+            </div>
+            <div class="form-group">
+              <label for="crsDept">Department</label>
+              <input type="text" id="crsDept" placeholder="e.g. Computer Science" required />
+            </div>
+          </div>
+          <button type="submit">
+            <span class="btn-text">+ Add Course</span>
+          </button>
+        </form>
+        <div id="crsMessage" class="form-message"></div>
+      </div>
+
+      <!-- Search & Filter -->
+      <div class="card search-bar-card">
+        <div class="search-filter-row">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="crsSearch" placeholder="Search by code or name..." />
+          </div>
+          <select id="crsDeptFilter" class="filter-select">
+            <option value="">All Departments</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Courses Table -->
+      <div class="card table-card">
+        <div class="table-header">
+          <h2>All Courses</h2>
+          <span id="crsCount" class="badge">0</span>
+        </div>
+
+        <div id="crsLoading" class="spinner-container">
+          <div class="spinner"></div>
+          <p>Loading courses...</p>
+        </div>
+
+        <div id="crsEmpty" class="empty-state" style="display:none;">
+          <div class="empty-icon">📖</div>
+          <p>No courses found. Add one above!</p>
+        </div>
+
+        <div class="table-wrapper" id="crsTableWrapper" style="display:none;">
+          <table>
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Credits</th>
+                <th>Department</th>
+                <th>Added</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="crsTableBody"></tbody>
+          </table>
+        </div>
+
+        <div class="pagination" id="crsPagination" style="display:none;">
+          <button class="page-btn" id="crsPrevPage" onclick="crsChangePage(-1)">← Prev</button>
+          <span class="page-info" id="crsPageInfo">Page 1 of 1</span>
+          <button class="page-btn" id="crsNextPage" onclick="crsChangePage(1)">Next →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!--  PAGE: ENROLLMENTS                                     -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <section class="page" id="page-enrollments">
+      <div class="page-header">
+        <h1>📝 Enrollments</h1>
+        <div class="page-actions">
+          <button class="export-btn" onclick="exportCSV('enrollments')">📥 Export CSV</button>
+        </div>
+      </div>
+
+      <!-- Enroll Student Form -->
+      <div class="card form-card">
+        <h2>➕ New Enrollment</h2>
+        <form id="enrollForm">
+          <div class="form-row form-row-4">
+            <div class="form-group">
+              <label for="enrStudent">Student</label>
+              <select id="enrStudent" required>
+                <option value="">Select Student...</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="enrCourse">Course</label>
+              <select id="enrCourse" required>
+                <option value="">Select Course...</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="enrSemester">Semester</label>
+              <input type="text" id="enrSemester" placeholder="e.g. Spring 2026" required />
+            </div>
+            <div class="form-group">
+              <label for="enrGrade">Grade (optional)</label>
+              <select id="enrGrade">
+                <option value="">Not graded</option>
+                <option>A+</option>
+                <option>A</option>
+                <option>A-</option>
+                <option>B+</option>
+                <option>B</option>
+                <option>B-</option>
+                <option>C+</option>
+                <option>C</option>
+                <option>C-</option>
+                <option>D+</option>
+                <option>D</option>
+                <option>D-</option>
+                <option>F</option>
+              </select>
+            </div>
+          </div>
+          <button type="submit">
+            <span class="btn-text">+ Enroll Student</span>
+          </button>
+        </form>
+        <div id="enrMessage" class="form-message"></div>
+      </div>
+
+      <!-- Search & Filter -->
+      <div class="card search-bar-card">
+        <div class="search-filter-row">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="enrSearch" placeholder="Search by student or course..." />
+          </div>
+          <select id="enrSemesterFilter" class="filter-select">
+            <option value="">All Semesters</option>
+          </select>
+          <select id="enrGradeFilter" class="filter-select">
+            <option value="">All Grades</option>
+            <option>A+</option>
+            <option>A</option>
+            <option>A-</option>
+            <option>B+</option>
+            <option>B</option>
+            <option>B-</option>
+            <option>C+</option>
+            <option>C</option>
+            <option>C-</option>
+            <option>D+</option>
+            <option>D</option>
+            <option>D-</option>
+            <option>F</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Enrollments Table -->
+      <div class="card table-card">
+        <div class="table-header">
+          <h2>All Enrollments</h2>
+          <span id="enrCount" class="badge">0</span>
+        </div>
+
+        <div id="enrLoading" class="spinner-container">
+          <div class="spinner"></div>
+          <p>Loading enrollments...</p>
+        </div>
+
+        <div id="enrEmpty" class="empty-state" style="display:none;">
+          <div class="empty-icon">📋</div>
+          <p>No enrollments found. Create one above!</p>
+        </div>
+
+        <div class="table-wrapper" id="enrTableWrapper" style="display:none;">
+          <table>
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Course</th>
+                <th>Grade</th>
+                <th>Semester</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="enrTableBody"></tbody>
+          </table>
+        </div>
+
+        <div class="pagination" id="enrPagination" style="display:none;">
+          <button class="page-btn" id="enrPrevPage" onclick="enrChangePage(-1)">← Prev</button>
+          <span class="page-info" id="enrPageInfo">Page 1 of 1</span>
+          <button class="page-btn" id="enrNextPage" onclick="enrChangePage(1)">Next →</button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ───── Edit Student Modal ───── -->
+  <div class="modal-overlay" id="editStudentModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>✏️ Edit Student</h2>
+        <button class="modal-close" onclick="closeModal('editStudentModal')">✕</button>
+      </div>
+      <form id="editStudentForm">
+        <input type="hidden" id="editStuId" />
+        <div class="form-group">
+          <label for="editStuName">Full Name</label>
+          <input type="text" id="editStuName" required />
+        </div>
+        <div class="form-group">
+          <label for="editStuEmail">Email</label>
+          <input type="email" id="editStuEmail" required />
+        </div>
+        <div class="form-group">
+          <label for="editStuCourse">Program</label>
+          <input type="text" id="editStuCourse" required />
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" onclick="closeModal('editStudentModal')">Cancel</button>
+          <button type="submit" class="save-btn">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ───── Edit Course Modal ───── -->
+  <div class="modal-overlay" id="editCourseModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>✏️ Edit Course</h2>
+        <button class="modal-close" onclick="closeModal('editCourseModal')">✕</button>
+      </div>
+      <form id="editCourseForm">
+        <input type="hidden" id="editCrsId" />
+        <div class="form-group">
+          <label for="editCrsCode">Course Code</label>
+          <input type="text" id="editCrsCode" required />
+        </div>
+        <div class="form-group">
+          <label for="editCrsName">Course Name</label>
+          <input type="text" id="editCrsName" required />
+        </div>
+        <div class="form-group">
+          <label for="editCrsCredits">Credits</label>
+          <input type="number" id="editCrsCredits" min="1" max="6" required />
+        </div>
+        <div class="form-group">
+          <label for="editCrsDept">Department</label>
+          <input type="text" id="editCrsDept" required />
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" onclick="closeModal('editCourseModal')">Cancel</button>
+          <button type="submit" class="save-btn">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ───── Edit Enrollment Modal ───── -->
+  <div class="modal-overlay" id="editEnrollModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>✏️ Edit Enrollment</h2>
+        <button class="modal-close" onclick="closeModal('editEnrollModal')">✕</button>
+      </div>
+      <form id="editEnrollForm">
+        <input type="hidden" id="editEnrId" />
+        <div class="form-group">
+          <label for="editEnrGrade">Grade</label>
+          <select id="editEnrGrade">
+            <option value="">Not graded</option>
+            <option>A+</option>
+            <option>A</option>
+            <option>A-</option>
+            <option>B+</option>
+            <option>B</option>
+            <option>B-</option>
+            <option>C+</option>
+            <option>C</option>
+            <option>C-</option>
+            <option>D+</option>
+            <option>D</option>
+            <option>D-</option>
+            <option>F</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="editEnrStatus">Status</label>
+          <select id="editEnrStatus">
+            <option value="enrolled">Enrolled</option>
+            <option value="completed">Completed</option>
+            <option value="dropped">Dropped</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="editEnrSemester">Semester</label>
+          <input type="text" id="editEnrSemester" required />
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" onclick="closeModal('editEnrollModal')">Cancel</button>
+          <button type="submit" class="save-btn">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>

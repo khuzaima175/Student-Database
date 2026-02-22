@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — Student Records</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body class="login-page">
+
+  <!-- ───── Floating Particles Background ───── -->
+  <div class="particles" id="particles"></div>
+
+  <!-- ───── Login Card ───── -->
+  <div class="login-container">
+    <div class="login-card">
+
+      <div class="login-header">
+        <div class="login-logo">📚</div>
+        <h1>Student Records</h1>
+        <p class="login-subtitle" id="loginSubtitle">Sign in to manage your students</p>
+      </div>
+
+      <!-- Tab Toggle -->
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="loginTab" onclick="switchTab('login')">Login</button>
+        <button class="auth-tab" id="signupTab" onclick="switchTab('signup')">Sign Up</button>
+      </div>
+
+      <!-- Auth Form -->
+      <form id="authForm">
+        <div class="form-group">
+          <label for="authEmail">Email Address</label>
+          <input type="email" id="authEmail" placeholder="e.g. you@university.edu" required />
+        </div>
+        <div class="form-group">
+          <label for="authPassword">Password</label>
+          <input type="password" id="authPassword" placeholder="At least 6 characters" required minlength="6" />
+        </div>
+        <button type="submit" id="authSubmitBtn">
+          <span class="btn-text" id="authBtnText">Sign In</span>
+          <span class="btn-loader" id="authBtnLoader" style="display:none;">
+            <span class="btn-spinner"></span>
+          </span>
+        </button>
+      </form>
+
+      <div id="authMessage" class="form-message"></div>
+
+      <div class="login-footer">
+        <p id="authFooterText">Don't have an account? <a href="#" onclick="switchTab('signup'); return false;">Sign Up</a></p>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="login.js"></script>
+</body>
+</html>
